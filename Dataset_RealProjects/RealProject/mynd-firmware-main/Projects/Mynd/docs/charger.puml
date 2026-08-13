@@ -1,0 +1,57 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+scale 650 width
+hide empty description
+
+state Active {
+' aliases to avoid unique names for Active and Inactive states
+  state "BFC" as BfcActive
+  state "Power Charging" as NonBfcActive
+
+  BfcActive : charge current 2.45A,
+  BfcActive : charge voltage 8.2V
+
+  NonBfcActive : charge current 4.9A,
+  NonBfcActive : charge voltage 8.4V
+
+  BfcActive -right-> NonBfcActive : BFCModeDisabled
+  NonBfcActive -left-> BfcActive : BFCModeEnabled
+}
+
+state Inactive {
+  state "BFC" as BfcInactive
+  state "Power Charging" as NonBfcInactive
+
+  Inactive : charge current 0A
+
+'  BfcInactive : set charge current 2.45A,
+'  BfcInactive : set charge voltage 8.2V
+'
+'  NonBfcInactive : set charge current 4.9A,
+'  NonBfcInactive : set charge voltage 8.4V
+
+  BfcInactive -right-> NonBfcInactive : BFCModeDisabled
+  NonBfcInactive -left-> BfcInactive :  BFCModeEnabled
+}
+
+state "Trickle Charging" as Trickle_Charging {
+    Trickle_Charging: charge current 0.5A
+}
+
+state "Not connected" as NotConnected {
+
+}
+
+Active --> Inactive : Battery current lower 500mA for 5sec\nand Battery >= 8.35V (8.15V for BFC)
+Trickle_Charging --> Active : Battery >= 6V
+Active --> Trickle_Charging : Battery < 6V
+Inactive --> Trickle_Charging : Battery < 6V
+BfcInactive --> BfcActive : Battery <=7.9V for 5sec
+NonBfcInactive --> NonBfcActive : Battery <= 8.1V for 5sec
+
+Active --> NotConnected : Disconnect charger
+Inactive --> NotConnected : Disconnect charger
+Trickle_Charging -> NotConnected : Disconnect charger
+NotConnected -> Trickle_Charging: Connect charger
+@enduml

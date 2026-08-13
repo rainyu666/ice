@@ -1,0 +1,70 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+== Early(Pre-scheduler) Init ==
+
+Baremetal -> Baremetal : Init (HAL, SystemClock)
+Baremetal -> Baremetal : Logger Init
+
+Baremetal -> Baremetal : Start Scheduler and Task System
+
+control System as System
+control Bluetooth as Bluetooth
+control Audio as Audio
+
+
+== System(Task) Init ==
+
+Baremetal -> System ** : start
+
+autonumber
+
+System -> System : SetPowerState{Transition}
+activate System
+
+System -> System : Early configurations
+
+System -> Bluetooth ** : start
+System -> Audio ** : start
+
+System -> System : SetPowerState{Off}
+deactivate System
+
+
+== PreOn power state ==
+
+System -> System : SetGlobalPowerState{Transition Off -> PreOn}
+activate System
+System -> Audio : SetPowerState{PreOn}
+Audio -> Battery: Init Battery
+
+Battery -> Battery : wait for PD controller
+Battery -> Battery : init/configure charger IC
+
+Audio --> System : Sync::notify(SetPowerState)
+
+deactivate System
+
+
+== On power state ==
+
+System -> System : SetGlobalPowerState{Transition PreOn -> On}
+
+activate System
+
+System -> Bluetooth : SetPowerState{On}
+Bluetooth --> System : Sync::notify(SetPowerState)
+
+System -> Audio : SetPowerState{On}
+
+note right: I2S must be configured on the BT side
+Audio -> Audio : Init AMPs
+
+Audio --> System : Sync::notify(SetPowerState)
+
+System -> System : Play SI(PowerOn)
+
+System -> System : SetGlobalPowerState{On}
+deactivate System
+
+@enduml

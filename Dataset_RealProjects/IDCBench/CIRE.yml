@@ -1,0 +1,32 @@
+dataset: CIRE
+cases:
+- case: cire_001
+  file: CIRE/cire_001/cire_001.c
+  bugs:
+  - 'active_index <-1>,<W#47>,<R#41>'
+  
+- case: cire_002
+  file: CIRE/cire_002/cire_002.c
+  bugs:
+  - 'speed_factor <-1>,<W#46>,<R#36>'
+
+- case: cire_003
+  file: CIRE/cire_003/cire_003.c
+  bugs:
+  - 'temperature_limit <W#21>,<R#41>,<-1>'
+
+- case: cire_004
+  file: CIRE/cire_004/cire_004.c
+  bugs:
+  - 'active_mode <W#43>,<R#36>,<-1>'
+
+- case: cire_005
+  file: CIRE/cire_005/cire_005.c
+  bugs: []
+
+- case: cire_006
+  file: CIRE/cire_006/cire_006.c
+  bugs:
+  - 'active_node <-1>,<W#45>,<R#39>'
+  
+dataset_id: CIRE

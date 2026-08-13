@@ -1,0 +1,8 @@
+add_subdirectory(battery)
+add_subdirectory(board)
+add_subdirectory(bsp)
+add_subdirectory(factory)
+add_subdirectory(leds)
+add_subdirectory(persistent_storage)
+add_subdirectory(tasks)
+add_subdirectory(tshell)

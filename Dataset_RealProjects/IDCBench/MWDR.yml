@@ -1,0 +1,33 @@
+dataset: MWDR
+dataset_id: MWDR
+description: Renumbered contiguous MWDR benchmark with normalized triplet labels
+cases:
+- case: mwdr_001
+  file: MWDR/mwdr_001/mwdr_001.c
+  bugs:
+  - g_TimeMsCount <R#35>,<W#47>,<R#35>
+  - g_TimeMsCount <R#36>,<W#47>,<R#36>
+  - g_TimeMsCount <R#37>,<W#47>,<R#37>
+
+- case: mwdr_002
+  file: MWDR/mwdr_002/mwdr_002.c
+  bugs:
+  - m1_step_count <R#31>,<W#41>,<R#31>
+  - m1_step_count <R#31>,<W#43>,<R#31>
+
+- case: mwdr_003
+  file: MWDR/mwdr_003/mwdr_003.c
+  bugs:
+  - global_utc_ms <R#28>,<W#37>,<R#28>
+
+- case: mwdr_004
+  file: MWDR/mwdr_004/mwdr_004.c
+  bugs:
+  - sensor_accumulators <R#34>,<W#45>,<R#34>
+
+- case: mwdr_005
+  file: MWDR/mwdr_005/mwdr_005.c
+  bugs:
+  - g_EncoderPulses <R#37>,<W#51>,<R#37>
+  - g_MotorSpeedRPM <R#39>,<W#53>,<R#39>
+  - g_MotorSpeedRPM <W#42>,<W#53>,<W#42>

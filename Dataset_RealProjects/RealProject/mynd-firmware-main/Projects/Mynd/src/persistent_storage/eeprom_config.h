@@ -1,0 +1,6 @@
+#pragma once
+
+#define EEPROM_FLASH_PAGE0 ((uint32_t) ADDR_FLASH_PAGE_62)
+#define EEPROM_FLASH_PAGE1 ((uint32_t) ADDR_FLASH_PAGE_63)
+
+#define EEPROM_ELEMENTS 13

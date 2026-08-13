@@ -1,0 +1,32 @@
+dataset: REAL_PROJECT
+dataset_id: REAL_PROJECT
+description: |
+  GitHub repos:
+    - https://github.com/r2axz/bluepill-serial-monster
+    - https://github.com/teufelaudio/mynd-firmware
+    - https://github.com/ttrftech/NanoVNA
+cases:
+- case: bluepill_serial_monster
+  file: 
+  - bluepill-serial-monster-main/main.c
+  - bluepill-serial-monster-main/usb_cdc.c
+  bugs:
+  - ctrl_shadow_state <R#38>,<W#526>,<R#42> | (38, 526, 42) | (main.c, usb_cdc.c, main.c) | RWR
+  - ctrl_shadow_state <W#39>,<W#526>,<R#42> | (39, 526, 42) | (main.c, usb_cdc.c, main.c) | WWR
+  - runtime_budget <R#41>,<W#527>,<W#42> | (41, 527, 42) | (main.c, usb_cdc.c, main.c) | RWW
+  - active_usb_config.timing.clock_divider <-1>,<W#28>,<R#46> | (-1, 28, 46) | (main.c, main.c, main.c) | CIRE
+
+- case: mynd_firmware
+  file: 
+  - mynd-firmware-main/Projects/Mynd/src/main.cpp
+  - mynd-firmware-main/Projects/Mynd/src/stm32f0xx_it.c
+  bugs:
+  - g_btlink_seq_tx <W#163>,<W#54>,<W#163> | (163, 54, 163) | (main.cpp, stm32f0xx_it.c, main.cpp) | WWR
+  - g_btlink_octets_u64 <W#164>,<W#55>,<W#164> | (164, 55, 164) | (main.cpp, stm32f0xx_it.c, main.cpp) | MWDR_WW
+
+- case: nanovna_main
+  file: 
+  - ttrftech__NanoVNA-main/main.c
+  bugs:
+  - g_sweep_decim <R#2439>,<W#2469>,<R#2440> | (2439, 2469, 2440) | (main.c, main.c, main.c) | RWR
+  - g_sweep_energy_u64 <W#2437>,<W#2470>,<W#2437> | (2437, 2470, 2437) | (main.c, main.c, main.c) | MWDR_WW

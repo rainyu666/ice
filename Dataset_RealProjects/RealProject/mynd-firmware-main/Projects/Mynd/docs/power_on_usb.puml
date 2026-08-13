@@ -1,0 +1,38 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+== Early(Pre-scheduler) Init ==
+
+Baremetal -> Baremetal : Init (HAL, SystemClock)
+Baremetal -> Baremetal : Logger Init
+
+Baremetal -> Baremetal : Start Scheduler and Task System
+
+control System as System
+control Bluetooth as Bluetooth
+control Audio as Audio
+
+
+== System(Task) Init ==
+
+Baremetal -> System ** : start
+
+autonumber
+
+System -> System : SetPowerState{Transition}
+activate System
+
+System -> System : Early configurations
+
+System -> Bluetooth ** : start
+System -> Audio ** : start
+
+Audio -> Audio : expander_init()
+
+Audio -> Audio : reset_expander()
+
+System -> System : SetPowerState{Off}
+deactivate System
+
+
+@enduml

@@ -1,0 +1,55 @@
+{
+  "project_name": "MYND",
+  "project_id": "oa2302",
+  "artifactory_path": "de.teufel.mcu.firmware-releases/de/teufel/firmware/mynd",
+  "components": [
+    {
+      "name": "bootloader",
+      "path": "bootloader",
+      "filename": "mynd-bootloader-v2.1.0.hex",
+      "version": "v2.1.0"
+    },
+    {
+      "name": "mcu",
+      "path": "mcu",
+      "filename": "mynd-v1.3.0.hex",
+      "version": "v1.3.0"
+    },
+    {
+      "name": "mcu-complete",
+      "path": "mcu",
+      "filename": "mynd-complete-v1.3.0.hex",
+      "version": "v1.3.0"
+    },
+    {
+      "name": "mcu-factory-complete",
+      "path": "mcu",
+      "filename": "mynd-factory-complete-v1.3.0.hex",
+      "version": "v1.3.0"
+    },
+    {
+      "name": "update-firmware-mcu",
+      "path": "mcu",
+      "filename": "mynd-update-firmware-mcu-v1.3.0.bin",
+      "version": "v1.3.0"
+    },
+    {
+      "name": "factory-update-firmware-mcu",
+      "path": "mcu",
+      "filename": "mynd-factory-update-firmware-mcu-v1.3.0.bin",
+      "version": "v1.3.0"
+    },
+    {
+      "name": "bluetooth",
+      "path": "bluetooth",
+      "filename": "Teufel_MYND_20241016_v1.3.8.zip",
+      "version": "v1.3.8"
+    },
+    {
+      "name": "pd-controller",
+      "path": "pd_controller",
+      "filename": "25751_no_bc1.2_3A_V2.5.zip",
+      "version": "v2.5"
+    }
+  ]
+}

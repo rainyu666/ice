@@ -1,0 +1,12 @@
+FROM gcc:13.2
+
+RUN apt-get update && apt-get -y install cmake ninja-build python3-pip protobuf-compiler python3-protobuf python3-crcmod && \
+    wget --no-check-certificate -O /tmp/gcc-arm-none-eabi.tar.bz2 https://developer.arm.com/-/media/Files/downloads/gnu/13.2.rel1/binrel/arm-gnu-toolchain-13.2.rel1-x86_64-arm-none-eabi.tar.bz2 && \
+    mkdir /usr/local/gcc-arm-none-eabi && \
+    tar xf /tmp/gcc-arm-none-eabi.tar.bz2 --strip-components=1 -C /usr/local/gcc-arm-none-eabi && \
+    rm -rf /tmp/gcc-arm-none-eabi.tar.bz2 && \
+    ln -s /usr/bin/gcc-12 /usr/bin/gcc && \
+    ln -s /usr/bin/g++-12 /usr/bin/g++
+#RUN pip3 install --no-cache-dir --upgrade pip && \
+#    pip3 install --no-cache-dir protobuf && \
+#    pip3 install --no-cache-dir crcmod

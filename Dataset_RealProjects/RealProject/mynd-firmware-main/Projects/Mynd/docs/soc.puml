@@ -1,0 +1,22 @@
+@startuml
+'https://plantuml.com/state-diagram
+
+scale 350 width
+[*] --> FirstStartOrBatteryReset: Approximate CHG based on VBAT and charge curve of Battery,\n Set CAP according to charge curve of Battery
+FirstStartOrBatteryReset: Set CHG based on VBAT LUT
+FirstStartOrBatteryReset: Set CAP based on charge curve of bat
+
+FirstStartOrBatteryReset -right-> FirstFullChargeCompleted : FirstFullChargeCompleted
+FirstFullChargeCompleted: Set CHG to CAP
+
+FirstStartOrBatteryReset -left-> FirstFullDischargeCompleted : FirstFullDischargeCompleted
+
+FirstFullChargeCompleted --> NormalOperation : Fill discharge to Vmin (6.2V) / Set CAP to CAP - CHG,\n Set CHG to 0mAh
+
+FirstFullDischargeCompleted --> NormalOperation : Fill charge to Vmax (8.4V) / Set CAP to CHG
+
+NormalOperation -> NormalOperation : FullCharge / Set CAP to (CHG+CAP)/2; Set CHG to CAP
+
+NormalOperation -> NormalOperation : FullDischarge / Set CAP to CAP-CHG/2; Set CHG to 0mAh
+
+@enduml

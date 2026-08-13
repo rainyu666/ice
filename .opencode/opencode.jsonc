@@ -1,0 +1,19 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "opencode": {
+      "options": {},
+    },
+  },
+  "mcp": {
+    "ice": {
+      "type": "local",
+      "command": ["ice/dist/ice-mcp-server"],
+      "timeout": 600000
+    }
+  },
+  "tools": {
+    "github-triage": false,
+    "github-pr-search": false,
+  },
+}

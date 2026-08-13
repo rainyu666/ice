@@ -1,0 +1,9 @@
+protobuf
+grpcio-tools
+python3-protobuf
+google
+crcmod
+intelhex
+json
+shutil
+wget

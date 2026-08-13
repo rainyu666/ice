@@ -1,0 +1,121 @@
+#!/usr/bin/python3
+
+import os
+import shutil
+import subprocess
+import sys
+
+
+def empty_revision():
+    return '0000000000000000000000000000000000000000'
+
+
+def is_file_formatted_correctly(filename, repo_file):
+    with open('{0}-formatted'.format(filename), 'w') as formatted_contents_file, open(filename, 'r') as in_contents:
+        subprocess.call(['clang-format', '-style=file', '--assume-filename={0}'.format(repo_file)], stdin=in_contents,stdout=formatted_contents_file)
+    diff = subprocess.call(['diff', '-u', filename, formatted_contents_file.name])
+    is_correct = not bool(diff)
+
+    return is_correct
+
+
+def get_old_revision_locally():
+    parent = subprocess.check_output(["git", "describe", "--abbrev=0", "--all", "HEAD~1"]).decode().strip()
+    revisions = subprocess.check_output(["git", "rev-list", "--reverse", "{0}..HEAD".format(parent)]).decode()
+
+    if len(revisions) == 0:
+        print("Hook warning: There is no revision to push; pushing anyway...")
+        sys.exit(0)
+
+    old_revision = subprocess.check_output(["git", "rev-parse", "{0}~1".format(revisions.split()[0])]).decode().strip()
+    return old_revision
+
+
+def get_filenames_between_revisions(old_revision, new_revision):
+    filenames = []
+
+    try:
+        FNULL = open(os.devnull, 'w')
+        filenames = subprocess.check_output(
+            ['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', new_revision, old_revision], stderr=FNULL)
+    except subprocess.CalledProcessError:
+        print("Hook warning: it seems that the remote branch is not related to the branch you want to push")
+        old_revision = get_old_revision_locally()
+        print("old revision=", old_revision, "new revision=", new_revision)
+        filenames = subprocess.check_output(
+            ['git', 'diff-tree', '--no-commit-id', '--name-only', '-r', new_revision, old_revision])
+
+    if len(filenames) == 0:
+        print("Hook warning: there is no difference in content between new and old revisions; pushing anyway...")
+        sys.exit(0)
+
+    source_filenames = []
+
+    for f in filenames.split():
+        f = f.decode()
+        if f.endswith('.c') or f.endswith('.cpp') or f.endswith('.h') or f.endswith('.hpp'):
+            source_filenames.append(f.strip())
+
+    return source_filenames
+
+
+def hook(old_revision, new_revision):
+    if old_revision == empty_revision():
+        old_revision = get_old_revision_locally()
+
+    filenames_between_revisions = get_filenames_between_revisions(
+        old_revision, new_revision)
+
+    result = True
+
+    for f in filenames_between_revisions:
+        if not os.path.isfile(f):
+            continue  # File has been deleted from the repository
+
+        tmp_filename = '.clang-format-check/{0}'.format(f)
+        dirname = os.path.dirname(tmp_filename)
+        try:
+            os.makedirs(dirname)
+        except:
+            pass
+        with open(tmp_filename, 'w') as temp_file:
+            subprocess.check_call(['git', 'show', '{0}:{1}'.format(new_revision, f)], stdout=temp_file)
+
+        if not is_file_formatted_correctly(tmp_filename, f):
+            result = False
+
+    return result
+
+if __name__ == '__main__':
+
+    line = ''
+    for l in sys.stdin:
+        line = l
+
+    new_revision = ''
+    old_revision = ''
+
+    if line == '':
+        new_revision = subprocess.check_output(["git", "rev-parse", "HEAD"]).decode().strip()
+        old_revision = empty_revision()
+    else:
+        new_revision = line.split()[1]
+        old_revision = line.split()[3]
+
+    if new_revision == empty_revision():
+        print("new revision is empty, you might be deleting a remote branch; pushing anyway...")
+        sys.exit(0)
+
+    result = False
+    try:
+        result = hook(old_revision, new_revision)
+    except OSError as e:
+        print('OSError reports: {} (exit code {}); is clang-format installed?'.format(e.strerror, e.errno))
+
+    if os.path.isdir('.clang-format-check'):
+        shutil.rmtree('.clang-format-check')
+
+    if result:
+        sys.exit(0)
+    else:
+        sys.exit(1)

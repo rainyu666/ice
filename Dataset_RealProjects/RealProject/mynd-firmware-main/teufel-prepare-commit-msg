@@ -1,0 +1,109 @@
+#!/usr/bin/python3
+
+import os
+import shutil
+import subprocess
+import sys
+
+
+def log_message_cannot_commit_outside_editor(log_file):
+    message = """# You've commited outside the editor.
+# To fix any formatting issues (listed below) you will have to get rid of this commit.
+#
+"""
+    log_file.write(message)
+
+
+def log_message_missing_clang_format_file(log_file):
+    message = '''# You do not have a .clang-format file at the top level of your git repository.
+# Formatting checks are disabled.
+'''
+    log_file.write(message)
+
+expected_clang_format_version = "14.0"
+
+def hook(log_filename, commit_message_source):
+    log_file = sys.stdout
+    if commit_message_source == 'editor':
+        log_file = open(log_filename, 'a')
+    elif commit_message_source == 'message':
+        log_message_cannot_commit_outside_editor(log_file)
+
+    repo_toplevel = subprocess.check_output(['git', 'rev-parse', '--show-toplevel']).decode().strip()
+
+    disable_formatting_check = False
+    if not os.path.isfile('{0}/.clang-format'.format(repo_toplevel)):
+        log_message_missing_clang_format_file(log_file)
+        disable_formatting_check = True
+
+    if not disable_formatting_check:
+        staged_files = subprocess.check_output(['git', 'diff', '--cached', '--name-only']).decode().split()
+        filtered_files = filter(lambda f: f.endswith('.cpp') or f.endswith(
+            '.c') or f.endswith('.h') or f.endswith('.hpp'), staged_files)
+
+        clang_format_version = subprocess.check_output(['clang-format', '--version']).decode().strip().split()[2]
+        if not clang_format_version.startswith(expected_clang_format_version):
+            print('*** clang-format in version {0} is required, but version {1} was found instead - giving up!\n'
+                  '*** HINT: you can download statically built clang-format binaries from {2}'.format(
+                expected_clang_format_version, clang_format_version,
+                'https://github.com/muttleyxd/clang-tools-static-binaries/releases'
+            ))
+            return False
+
+        no_suggestions_to_make = True
+
+        for f in filtered_files:
+            if not os.path.isfile(f):  # File has been deleted from the repository
+                continue
+
+            tmp_filename = '.clang-format-check/{0}'.format(f)
+            dirname = os.path.dirname(tmp_filename)
+            try:
+                os.makedirs(dirname)
+            except:
+                pass
+            with open(tmp_filename, 'w') as temp_file:
+                subprocess.check_call(
+                    ['clang-format', '-style=file', f], stdout=temp_file)
+
+            diff_cmd = subprocess.Popen(
+                'diff -u {0} {1}'.format(f, tmp_filename), stdout=subprocess.PIPE, shell=True)
+            diff_cmd_out = diff_cmd.communicate()[0].decode().strip()
+
+            if diff_cmd_out == '':
+                continue
+
+            diff_lines = map(lambda line: '# ' + line, diff_cmd_out.split('\n'))
+
+            diff_text = '\n'.join(diff_lines)
+
+            log_file.write(diff_text)
+            log_file.write('\n#\n')
+
+            no_suggestions_to_make = False
+
+        if no_suggestions_to_make:
+            log_file.write('# Code formatting ok.\n')
+
+    return True
+
+if __name__ == '__main__':
+    commit_message_source = 'editor'
+
+    log_filename = sys.argv[1]
+    if len(sys.argv) > 2:
+        commit_message_source = sys.argv[2]
+
+    result = False
+    try:
+        result = hook(log_filename, commit_message_source)
+    except OSError as e:
+        print('OSError reports: {} (exit code {}); is clang-format installed?'.format(e.strerror, e.errno))
+
+    if os.path.isdir('.clang-format-check'):
+        shutil.rmtree('.clang-format-check')
+
+    if result:
+        sys.exit(0)
+    else:
+        sys.exit(1)

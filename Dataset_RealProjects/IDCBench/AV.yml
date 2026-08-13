@@ -1,0 +1,167 @@
+dataset: AV
+cases:
+- case: svp_simple_001
+  file: AV/svp_simple_001/svp_simple_001_001.c
+  bugs:
+  - svp_simple_001_001_global_array<W#32>,<R#55>,<W#35>
+  
+- case: svp_simple_002
+  file: AV/svp_simple_002/svp_simple_002_001.c
+  bugs:
+  - svp_simple_002_001_global_array<W#33>,<W#44><R#37>
+  
+- case: svp_simple_003
+  file: AV/svp_simple_003/svp_simple_003_001.c
+  bugs:
+  - svp_simple_003_001_global_var1<R#50>,<W#65>,<R#55>
+  
+- case: svp_simple_004
+  file: AV/svp_simple_004/svp_simple_004_001.c
+  bugs:
+  - svp_simple_004_001_global_var1<R#41>,<W#59>,<R#46>
+  
+- case: svp_simple_005
+  file: AV/svp_simple_005/svp_simple_005_001.c
+  bugs:
+  - svp_simple_005_001_global_var<W#32>,<R#46>,<W#40>
+  
+- case: svp_simple_006
+  file: AV/svp_simple_006/svp_simple_006_001.c
+  bugs:
+  - svp_simple_006_001_global_var1<R#33>,<W#52>,<R#35>
+  
+- case: svp_simple_007
+  file: AV/svp_simple_007/svp_simple_007_001.c
+  bugs:
+  - svp_simple_007_001_global_array<W#36>,<W#45>,<R#40>
+  
+- case: svp_simple_008
+  file: AV/svp_simple_008/svp_simple_008_001.c
+  bugs: []
+  
+- case: svp_simple_009
+  file: AV/svp_simple_009/svp_simple_009_001.c
+  bugs:
+  - '*svp_simple_009_001_p<W#32>,<R#44>,<W#33>'
+  - '*svp_simple_009_001_m<W#35>,<W#46>,<W#37>'
+  - '*svp_simple_009_001_m<W#37>,<W#46>,<W#38>'
+
+- case: svp_simple_010
+  file: AV/svp_simple_010/svp_simple_010_001.c
+  bugs:
+  - svp_simple_010_001_global_union.header<W#40>,<R#51>,<W#41>
+  
+- case: svp_simple_011
+  file: AV/svp_simple_011/svp_simple_011_001.c
+  bugs:
+  - '*p<W#30>,<R#42>,<W#31>'
+
+- case: svp_simple_012
+  file: AV/svp_simple_012/svp_simple_012_001.c
+  bugs:
+  - svp_simple_012_001_global_var<W#27>,<R#34>,<W#29>
+  
+- case: svp_simple_013
+  file: AV/svp_simple_013/svp_simple_013_001.c
+  bugs:
+  - svp_simple_013_001_global_var1<R#39>,<W#65>,<R#41>
+  
+- case: svp_simple_014
+  file: AV/svp_simple_014/svp_simple_014_001.c
+  bugs:
+  - svp_simple_014_001_global_var1<R#39>,<W#58>,<R#41>
+  
+- case: svp_simple_015
+  file: AV/svp_simple_015/svp_simple_015_001.c
+  bugs:
+  - svp_simple_015_001_global_var1<R#30>,<W#39>,<R#31>
+  
+- case: svp_simple_016
+  file: AV/svp_simple_016/svp_simple_016_001.c
+  bugs:
+  - svp_simple_016_001_global_var1<W#24>,<R#33>,<R#25>
+  - svp_simple_016_001_global_var1<R#25>,<W#33>,<R#26>
+  - svp_simple_016_001_global_var1<R#26>,<W#33>,<R#27>
+  
+- case: svp_simple_017
+  file: AV/svp_simple_017/svp_simple_017_001.c
+  bugs:
+  - svp_simple_017_001_global_var<R#29>,<W#39>,<R#29>
+  - svp_simple_017_001_global_var<R#29>,<W#39>,<R#32>
+  - svp_simple_017_001_global_var<R#32>,<W#39>,<W#30>
+  - svp_simple_017_001_global_var<W#30>,<W#39>,<R#29>
+
+  
+- case: svp_simple_018
+  file: AV/svp_simple_018/svp_simple_018_001.c
+  bugs:
+  - svp_simple_018_001_para2<R#48>,<W#54>,<R#49>
+  
+- case: svp_simple_019
+  file: AV/svp_simple_019/svp_simple_019_001.c
+  bugs:
+  - svp_simple_019_001_global_var1<R#45>,<W#65>,<R#54>
+  
+- case: svp_simple_020
+  file: AV/svp_simple_020/svp_simple_020_001.c
+  bugs:
+  - svp_simple_020_001_global_para<R#36>,<W#52>,<R#39>
+
+- case: svp_simple_021
+  file: AV/svp_simple_021/svp_simple_021_001.c
+  bugs:
+  - svp_simple_021_001_tc_block_rcvd_bytes_ch1<R#44>,<W#79>,<W#45>
+
+- case: svp_simple_022
+  file: AV/svp_simple_022/svp_simple_022_001.c
+  bugs:
+  - svp_simple_022_001_global_var1<R#55>,<W#66>,<R#58>
+
+- case: svp_simple_023
+  file: AV/svp_simple_023/svp_simple_023_001.c
+  bugs:
+  - svp_simple_023_001_global_var<R#35>,<W#39>,<W#35>
+  
+- case: svp_simple_024
+  file: AV/svp_simple_024/svp_simple_024_001.c
+  bugs:
+  - svp_simple_024_001_global_array[1]<R#56>,<W#63>,<R#57>
+  
+- case: svp_simple_025
+  file: AV/svp_simple_025/svp_simple_025_001.c
+  bugs:
+  - svp_simple_025_001_global_var<R#35>,<W#38>,<W#35>
+  
+- case: svp_simple_026
+  file: AV/svp_simple_026/svp_simple_026_001.c
+  bugs:
+  - svp_simple_026_001_gloable_var<R#26>,<W#43>,<W#27>
+  
+- case: svp_simple_027
+  file: AV/svp_simple_027/svp_simple_027_001.c
+  bugs:
+  - svp_simple_027_001_gloable_var<R#27>,<W#41>,<W#28>
+  - svp_simple_027_001_gloable_var<R#27>,<W#45>,<W#28>
+  
+- case: svp_simple_028
+  file: AV/svp_simple_028/svp_simple_028_001.c
+  bugs:
+  - svp_simple_028_001_gloable_var<R#29>,<W#43>,<W#30>
+  - svp_simple_028_001_gloable_var<R#29>,<W#49>,<W#30>
+
+- case: svp_simple_029
+  file: AV/svp_simple_029/svp_simple_029_001.c
+  bugs: []
+
+- case: svp_simple_030
+  file: AV/svp_simple_030/svp_simple_030_001.c
+  bugs:
+  - svp_simple_030_001_gloable_var<R#29>,<W#43>,<W#30>
+  - svp_simple_030_001_gloable_var<R#29>,<W#52>,<W#30>
+
+- case: svp_simple_031
+  file: AV/svp_simple_031/svp_simple_031_001.c
+  bugs:
+  - svp_simple_031_001_tc_block_rcvd_bytes_ch1<R#83>,<W#90>,<R#85>
+ 
+dataset_id: AV

@@ -1,0 +1,9 @@
+[submodule "sdk/STM32CubeF0"]
+	path = sdk/STM32CubeF0
+	url = https://github.com/STMicroelectronics/STM32CubeF0.git
+[submodule "Projects/Mynd/external/thirdparty/nanopb"]
+	path = Projects/Mynd/external/thirdparty/nanopb
+	url = https://github.com/nanopb/nanopb.git
+[submodule "Projects/Mynd/external/thirdparty/freertos-kernel"]
+	path = Projects/Mynd/external/thirdparty/freertos-kernel
+	url = https://github.com/FreeRTOS/FreeRTOS-Kernel.git

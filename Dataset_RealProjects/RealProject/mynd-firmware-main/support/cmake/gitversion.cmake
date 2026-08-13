@@ -1,0 +1,66 @@
+cmake_minimum_required(VERSION 3.13.0)
+
+find_package(Git REQUIRED)
+
+FUNCTION(SET_VERSION TARGET)
+    GET_APP_VERSION(${GIT_DESCRIBE_VERSION} VERSION_MAJOR VERSION_MINOR VERSION_PATCH VERSION_BUILD)
+    GET_TARGET_PROPERTY(TARGET_DEFS ${TARGET} COMPILE_DEFINITIONS)
+    IF(TARGET_DEFS)
+        SET(TARGET_DEFS "BUILD=${VERSION_BUILD};VERSION_MAJOR=${VERSION_MAJOR};VERSION_MINOR=${VERSION_MINOR};VERSION_PATCH=${VERSION_PATCH};DSP_BUILD_NAME=${DspBuildName};${TARGET_DEFS}")
+    ELSE()
+        SET(TARGET_DEFS "BUILD=${VERSION_BUILD};VERSION_MAJOR=${VERSION_MAJOR};VERSION_MINOR=${VERSION_MINOR};VERSION_PATCH=${VERSION_PATCH};DSP_BUILD_NAME=${DspBuildName}")
+    ENDIF()
+    SET_TARGET_PROPERTIES(${TARGET} PROPERTIES COMPILE_DEFINITIONS "${TARGET_DEFS}")
+ENDFUNCTION()
+
+MACRO(GET_APP_VERSION GIT_DESCRIBE MAJ MIN PATCH BUILD)
+
+    IF(NOT ${GIT_DESCRIBE})
+        SET(${GIT_DESCRIBE} "0.0.0")
+    ENDIF()
+
+    STRING(REGEX MATCH "([0-9]+)[.]([0-9]+)[.]([0-9]+)[-]?([0-9]+)?[-]?([A-Za-z0-9-]+)?" GIT_DESCRIBE_MATCH "${GIT_DESCRIBE}")
+
+    IF(GIT_DESCRIBE_MATCH)
+        SET(${MAJ} ${CMAKE_MATCH_1})
+        SET(${MIN} ${CMAKE_MATCH_2})
+        SET(${PATCH} ${CMAKE_MATCH_3})
+
+        # Set the number commits after the last tag
+        # IF(CMAKE_MATCH_4)
+        #   SET(${VERSION_PATCH} ${CMAKE_MATCH_4})
+        # ELSE()
+        #   SET(${VERSION_PATCH} )
+        # ENDIF()
+
+        IF(CMAKE_MATCH_5)
+            SET(${BUILD} "${CMAKE_MATCH_5}")
+        ELSE()
+            SET(${BUILD} "")
+        ENDIF()
+    ELSE()
+        MESSAGE(FATAL_ERROR "Couldn't parse major/minor/maintenance versions from git describe output '${${GIT_DESCRIBE}}'")
+    ENDIF()
+ENDMACRO(GET_APP_VERSION)
+
+if(GIT_FOUND)
+    execute_process(
+        COMMAND git describe --tag --always --abbrev=10 --dirty
+        WORKING_DIRECTORY "${root_dir}"
+        OUTPUT_VARIABLE GIT_DESCRIBE_VERSION
+        ERROR_QUIET
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    MESSAGE(STATUS "GIT describe: ${GIT_DESCRIBE_VERSION}")
+else()
+    MESSAGE(STATUS "GIT not found")
+endif()
+
+#GET_APP_VERSION(${GIT_DESCRIBE_VERSION} VERSION_MAJOR VERSION_MINOR VERSION_PATCH VERSION_BUILD)
+GET_APP_VERSION("0.0.0-dummy-os" VERSION_MAJOR VERSION_MINOR VERSION_PATCH VERSION_BUILD)
+
+
+configure_file(
+    ${root_dir}/gitversion/gitversion.h.in
+    ${bin_dir}/gitversion.h
+)
