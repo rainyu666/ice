@@ -1,7 +1,5 @@
 # ICE (Intelligent Concurrency Examiner) Project
 
-English | [简体中文](README_zh.md)
-
 This project combines Artificial Intelligence (Large Language Models) with static code analysis techniques (such as Joern) to provide automated defect detection capabilities for embedded C projects.
 
 ## 🚀 Prerequisites
